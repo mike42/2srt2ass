@@ -1,0 +1,4 @@
+#!/usr/bin/env php
+<?php
+echo "Not implemented";
+exit(1);
