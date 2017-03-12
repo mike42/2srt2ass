@@ -3,6 +3,7 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 
 use CombineSubtitles\Web;
 
+// Process page
 $converterWeb = new Web();
 $error = null;
 try {
@@ -18,7 +19,7 @@ try {
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>2srt2ass</title>
+        <title>2srt2ssa</title>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
         <script type="text/javascript" src="jscolor/jscolor.js"></script>
@@ -59,14 +60,14 @@ p { padding: 0; margin: 20px 30px; }
     </head>
     <body>
         <div class="page">
-            <h1 class="main-title">2srt2ass</h1>
+            <h1 class="main-title">2srt2ssa</h1>
 <?php if ($error != null) : ?>
             <div class="error">
                 <h2>Error</h2>
                 <p><?= $error ?></p>
             </div>
 <?php endif; ?>
-            <h3>Merge two .srt files, to one .ass file</h3>
+            <h3>Merge two .srt files, to one .ssa file</h3>
             <div class="main-form">
                 <form action="." method="post" enctype="multipart/form-data" name="form">
                     <input type="hidden" name="send" value="yes">
@@ -85,16 +86,12 @@ p { padding: 0; margin: 20px 30px; }
                         <span class="form-label"><label for="fontsize">Font size</label> :</span>
                         <span class="form-input">
                             <select id="fontsize" name="fontsize">
-                                <option value="12"></option>
-                                <option value="14"></option>
-                                <option value="16"></option>
-                                <option value="18"></option>
-                                <option value="20"></option>
-                                <option value="22"></option>
-                                <option value="24"></option>
-                                <option value="26"></option>
-                                <option value="28"></option>
-                                <option value="80"></option>
+<?php
+foreach (Web::FONT_SIZES as $fontSize) {
+    $selected = $fontSize === $formVals['fontsize'] ? " selected" : "";
+    echo "                            <option value=\"" . htmlspecialchars($fontSize) . "\"$selected></option>\n";
+}
+?>
                             </select>
                         </span>
                     </div>
@@ -103,22 +100,24 @@ p { padding: 0; margin: 20px 30px; }
                         <span class="form-label"><label for="fontname">Font name</label> :</span>
                         <span class="form-input">
                             <select id="fontname" name="fontname">
-                                <option value="Arial"></option>
-                                <option value="Comic Sans MS"></option>
-                                <option value="Helvetica"></option>
-                                <option value="Verdana"></option>
+<?php
+foreach (Web::FONT_NAMES as $fontName) {
+    $selected = $fontName === $formVals['fontname'] ? " selected" : "";
+    echo "                            <option value=\"" . htmlspecialchars($fontName) . "\"$selected></option>\n";
+}
+?>
                             </select>
                         </span>
                     </div>
                     
                     <div class="form-row">
                         <span class="form-label"><label for="topColor">Top color</label> :</span>
-                        <span class="form-input"><input type="text" id="topColor" name="topColor" class="color {hash:true}" />
+                        <span class="form-input"><input type="text" id="topColor" name="topColor" class="color {hash:true}" value="<?php echo htmlspecialchars($formVals['topColor']); ?>" />
                     </div>
                     
                     <div class="form-row">
                         <span class="form-label"><label for="botColor">Bottom color</label> :</span>
-                        <span class="form-input"><input type="text" id="botColor" name="botColor" class="color {hash:true}" />
+                        <span class="form-input"><input type="text" id="botColor" name="botColor" class="color {hash:true}" value="<?php echo htmlspecialchars($formVals['botColor']); ?>" />
                     </div>
                     
                     <div class="form-row">

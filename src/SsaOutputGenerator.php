@@ -3,7 +3,6 @@ namespace CombineSubtitles;
 
 class SsaOutputGenerator
 {
-
     const DEFAULT_FONT_NAME = 'Arial';
 
     const DEFAULT_FONT_SIZE = 16;

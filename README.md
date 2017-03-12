@@ -1,4 +1,4 @@
-# 2srt2ass
+# 2srt2ssa
 
 ```
 composer install

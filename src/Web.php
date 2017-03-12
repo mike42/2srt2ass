@@ -3,10 +3,14 @@ namespace CombineSubtitles;
 
 class Web
 {
+    // Enumerate values for dropdowns in web app.
+    const FONT_SIZES = array('12', '14', '16', '18', '20', '22', '24', '26', '28', '80');
+    const FONT_NAMES = array("Arial", "Comic Sans MS", "Helvetica", "Verdana");
+
     public function getFile(array $files, $name)
     {
         if (!isset($files[$name]) || $files[$name]['error'] !== 0) {
-            throw new Exception('File was not uploaded. Please try again.');
+            throw new \Exception('File was not uploaded. Please try again.');
         }
         $file = $files[$name];
         return $file;
@@ -51,19 +55,28 @@ class Web
 
         // Retrieve values if set via post, otherwise use defaults
         $configured = $this -> fillInDefaults($defaults, $post);
-        $this -> saveValuesAsCookies($configured);
+        // Validation time..
+        if(array_search($configured['fontname'], self::FONT_NAMES, true) === false) {
+            throw new \Exception("Invalid font");
+        }
+        if(array_search($configured['fontsize'], self::FONT_SIZES, true) === false) {
+            throw new \Exception("Invalid font size");
+        }
         // Process uploaded files
         $top = $this -> getFile($files, 'top');
         $bot = $this -> getFile($files, 'bot');
 
         // Get output name
-        $outputName = preg_replace('/(\.[a-zA-Z]{2,3})?\.srt$/', '.ass', $bot['name']);
+        $outputName = preg_replace('/(\.[a-zA-Z]{2,3})?\.srt$/', '.ssa', $bot['name']);
 
         $subtitleTop = SrtInput::fromFile($top['tmp_name']);
         $subtitleTop->setColor(new ColorWrapper($configured['topColor']));
 
         $subtitleBot = SrtInput::fromFile($bot['tmp_name']);
         $subtitleBot->setColor(new ColorWrapper($configured['botColor']));
+
+        // These values are all validated now. Good to save as cookies.
+        $this -> saveValuesAsCookies($configured);
 
         $outpGenerator = new SsaOutputGenerator();
         $outpGenerator->setFontName($configured['fontname']);
