@@ -1,4 +1,7 @@
 #!/usr/bin/env php
 <?php
-echo "Not implemented";
-exit(1);
+require_once(__DIR__ . '/../vendor/autoload.php');
+use CombineSubtitles\CommandLine;
+$cli = new CommandLine();
+$ret = $cli -> run($argv, STDIN, STDOUT, STDERR);
+exit($ret);
