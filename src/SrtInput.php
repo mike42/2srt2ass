@@ -56,7 +56,10 @@ class SrtInput
 
     public static function fromFile($fileName)
     {
-        $subtitleText = file_get_contents($fileName);
+        $subtitleText = @file_get_contents($fileName);
+        if ($subtitleText === false) {
+            throw new \Exception("Unable to open input file '$fileName'");
+        }
         return new SrtInput($subtitleText);
     }
 }
