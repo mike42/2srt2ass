@@ -8,7 +8,7 @@ class ColorWrapper
     {
         // normalise to uppercase
         $rgbHex = strtoupper($rgbHex);
-        if(preg_match('/^#([0-9a-f]{6})$/i', $rgbHex) !== 1) {
+        if (preg_match('/^#([0-9a-f]{6})$/i', $rgbHex) !== 1) {
             throw new \Exception("Invalid hex color");
         }
         $this -> rgbHex = $rgbHex;

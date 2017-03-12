@@ -56,10 +56,10 @@ class Web
         // Retrieve values if set via post, otherwise use defaults
         $configured = $this -> fillInDefaults($defaults, $post);
         // Validation time..
-        if(array_search($configured['fontname'], self::FONT_NAMES, true) === false) {
+        if (array_search($configured['fontname'], self::FONT_NAMES, true) === false) {
             throw new \Exception("Invalid font");
         }
-        if(array_search($configured['fontsize'], self::FONT_SIZES, true) === false) {
+        if (array_search($configured['fontsize'], self::FONT_SIZES, true) === false) {
             throw new \Exception("Invalid font size");
         }
         // Process uploaded files
