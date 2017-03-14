@@ -52,38 +52,43 @@ class Web
             // Return values set via cookies, otherwise use defaults
             return $this -> fillInDefaults($defaults, $cookie);
         }
+        
+        try {
+            // Retrieve values if set via post, otherwise use defaults
+            $configured = $this -> fillInDefaults($defaults, $post);
+            // Validation time..
+            if (array_search($configured['fontname'], self::FONT_NAMES, true) === false) {
+                throw new \Exception("Invalid font");
+            }
+            if (array_search($configured['fontsize'], self::FONT_SIZES, true) === false) {
+                throw new \Exception("Invalid font size");
+            }
+            // Process uploaded files
+            $top = $this -> getFile($files, 'top');
+            $bot = $this -> getFile($files, 'bot');
+    
+            // Get output name
+            $outputName = preg_replace('/(\.[a-zA-Z]{2,3})?\.srt$/', '.ssa', $bot['name']);
+    
+            $subtitleTop = SrtInput::fromFile($top['tmp_name']);
+            $subtitleTop->setColor(new ColorWrapper($configured['topColor']));
+    
+            $subtitleBot = SrtInput::fromFile($bot['tmp_name']);
+            $subtitleBot->setColor(new ColorWrapper($configured['botColor']));
+    
+            $outpGenerator = new SsaOutputGenerator();
+            $outpGenerator->setFontName($configured['fontname']);
+            $outpGenerator->setFontSize($configured['fontsize']);
+            $outpGenerator->setForceBottom($configured['forceBottom'] == '1');
+            $outputData = $outpGenerator->generate($subtitleTop, $subtitleBot);
 
-        // Retrieve values if set via post, otherwise use defaults
-        $configured = $this -> fillInDefaults($defaults, $post);
-        // Validation time..
-        if (array_search($configured['fontname'], self::FONT_NAMES, true) === false) {
-            throw new \Exception("Invalid font");
+            // These values are all validated now. Good to save as cookies.
+            $this -> saveValuesAsCookies($configured);
+        } catch (\Exception $e) {
+            // Pass on any errors with standard form values
+            $configured['error'] = $e -> getMessage();
+            return $configured;
         }
-        if (array_search($configured['fontsize'], self::FONT_SIZES, true) === false) {
-            throw new \Exception("Invalid font size");
-        }
-        // Process uploaded files
-        $top = $this -> getFile($files, 'top');
-        $bot = $this -> getFile($files, 'bot');
-
-        // Get output name
-        $outputName = preg_replace('/(\.[a-zA-Z]{2,3})?\.srt$/', '.ssa', $bot['name']);
-
-        $subtitleTop = SrtInput::fromFile($top['tmp_name']);
-        $subtitleTop->setColor(new ColorWrapper($configured['topColor']));
-
-        $subtitleBot = SrtInput::fromFile($bot['tmp_name']);
-        $subtitleBot->setColor(new ColorWrapper($configured['botColor']));
-
-        // These values are all validated now. Good to save as cookies.
-        $this -> saveValuesAsCookies($configured);
-
-        $outpGenerator = new SsaOutputGenerator();
-        $outpGenerator->setFontName($configured['fontname']);
-        $outpGenerator->setFontSize($configured['fontsize']);
-        $outpGenerator->setForceBottom($configured['forceBottom'] == '1');
-        $outputData = $outpGenerator->generate($subtitleTop, $subtitleBot);
-
         // Render
         header("Content-type: application/octet-stream;");
         header("Content-Disposition: attachment; filename=\"$outputName\"");

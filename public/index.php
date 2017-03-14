@@ -6,14 +6,13 @@ use CombineSubtitles\Web;
 // Process page
 $converterWeb = new Web();
 $error = null;
-try {
-    $formVals = $converterWeb -> processPage($_POST, $_FILES, $_COOKIE);
-    if ($formVals === false) {
-        // A file has already been sent to the user
-        die();
-    }
-} catch (Exception $e) {
-    $error = $e -> getMessage();
+$formVals = $converterWeb -> processPage($_POST, $_FILES, $_COOKIE);
+if ($formVals === false) {
+    // A file has already been sent to the user
+    die();
+}
+if (isset($formVals['error'])) {
+    $error = $formVals['error'];
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
