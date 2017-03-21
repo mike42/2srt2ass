@@ -8,7 +8,7 @@ php:
 addons:
   apt:
     packages:
-    - rubygem-sass
+    - ruby-sass
     - imagemagick
     - make
 
