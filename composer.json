@@ -2,6 +2,12 @@
 	"require" : {
 		"squizlabs/php_codesniffer" : "^2.8"
 	},
+	"scripts" : {
+		"post-install-cmd": [
+			"php public/index.php > src/index.html",
+			"npm install"
+		]
+	},
 	"autoload" : {
 		"psr-4" : {
 			"CombineSubtitles\\" : "lib/"

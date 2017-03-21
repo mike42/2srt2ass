@@ -1,0 +1,160 @@
+@import '_variables.scss';
+@import 'bootstrap';
+$colorpicker-img-path: "../images";
+@import '_colorpicker';
+
+/**
+ * Narrow jumbotron example: https://v4-alpha.getbootstrap.com/examples/narrow-jumbotron/narrow-jumbotron.css
+ */
+/* Space out content a bit */
+body {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.footer,
+.header,
+.marketing {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+/* Custom page header */
+.header {
+    border-bottom: 0.05rem solid #e5e5e5;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 3rem;
+}
+/* Custom page footer */
+.footer {
+    padding-top: 1.5rem;
+    color: #777;
+    border-top: 0.05rem solid #e5e5e5;
+}
+/* Customize container */
+@media (min-width: 48em) {
+    .container {
+        max-width: 46rem;
+    }
+}
+
+.container-narrow > hr {
+    margin: 2rem 0;
+}
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: center;
+    border-bottom: 0.05rem solid #e5e5e5;
+}
+
+.jumbotron .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.5rem;
+}
+/* Supporting marketing content */
+.marketing {
+    margin: 3rem 0;
+}
+
+.marketing p + h4 {
+    margin-top: 1.5rem;
+}
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 48em) {
+    /* Remove the padding we set earlier */
+    .footer,
+    .header,
+    .marketing {
+        padding-right: 0;
+        padding-left: 0;
+    }
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 1rem;
+    }
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
+
+/**
+ * Other stuff
+ */
+ .big-char {
+   margin-top: 0.4em;
+   font-size: 200%;
+ }
+
+.subtitle-main {
+  color: white;
+}
+
+.subtitle-alt {
+  color: $brand-info;
+}
+
+.subtitle-spacer-middle {
+  height: 1.5em;
+  display: block;
+}
+
+.subtitle-spacer-top {
+  height: 1.5em;
+  display: none;
+}
+
+.preview-together .subtitle-spacer-top {
+  display: block;
+}
+
+.preview-together .subtitle-spacer-middle {
+  display: none;
+}
+
+.subtitle {
+  margin-bottom: 0;
+  height: 1em;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.subtitle-box {
+  @extend .rounded;
+  width: 8em;
+  height: 4.5em;
+  border: 3px solid $gray;
+  background: $gray-dark;
+  margin-bottom: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h3 {
+  margin-top: 4rem;
+}
+
+h4 {
+  margin-top: 1rem;
+}
+
+h4.card-title {
+  margin-top: 0;
+}
+
+// Totally override jumbotron settings
+.jumbotron {
+  padding: $jumbotron-padding ($jumbotron-padding / 2);
+  margin-bottom: 1rem;
+  background-color: $jumbotron-bg;
+  @include border-radius($border-radius-lg);
+
+  @include media-breakpoint-up(sm) {
+    padding: ($jumbotron-padding * 2) $jumbotron-padding;
+  }
+}
