@@ -5,6 +5,7 @@
 	"scripts" : {
 		"post-install-cmd": [
 			"php public/index.php > src/index.html",
+			"make -C src/images/favicon/",
 			"npm install"
 		]
 	},

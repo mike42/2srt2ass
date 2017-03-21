@@ -5,6 +5,13 @@ php:
   - 5.6
   - 7.0
 
+addons:
+  apt:
+    packages:
+    - rubygem-sass
+    - imagemagick
+    - make
+
 install:
   - composer install
 
