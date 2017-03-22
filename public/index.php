@@ -1,4 +1,24 @@
-<!DOCTYPE html>
+<?php
+require_once(__DIR__ . '/../vendor/autoload.php');
+
+use CombineSubtitles\Web;
+
+// Process page
+$converterWeb = new Web();
+$error = null;
+$formVals = $converterWeb -> processPage($_POST, $_FILES, $_COOKIE);
+if ($formVals === false) {
+    // A file has already been sent to the user
+    die();
+}
+if (isset($formVals['error'])) {
+    $error = $formVals['error'];
+}
+if(php_sapi_name() === "cli") {
+    // Ensure we get the error box on the CLI.
+    $error = "Console in use";
+}
+?><!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -74,9 +94,13 @@
 
     </div>
 
-
-    <form>
-
+    <form action="." method="post" enctype="multipart/form-data" name="form">
+        <input type="hidden" name="send" value="yes">
+<?php if ($error !== null) : ?>
+      <div class="alert alert-danger" role="alert">
+        <strong>Error!</strong> <?= htmlentities($error) ?>
+      </div>
+<?php endif; ?>
       <div class="row">
         <div class="col-lg-6">
           <div class="card">
@@ -85,14 +109,14 @@
               <h6 class="card-subtitle mb-2 text-muted">This subtitle track will appear at the bottom of the display.</h6>
 
               <div class="form-group">
-                <label for="exampleInputFile">Subtitle file</label>
-                <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
-                <small id="fileHelp" class="form-text text-muted">File must be in WebVTT or SRT format.</small>
+                <label for="mainInputFile">Subtitle file</label>
+                <input type="file" class="form-control-file" id="mainInputFile" aria-describedby="mainFileHelp" name="bot">
+                <small id="mainFileHelp" class="form-text text-muted">File must be in WebVTT or SRT format.</small>
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Display color</label>
-                <div id="cp3" class="input-group colorpicker-component">
-                  <input id="cp3-input" type="text" value="#FFFFFF" class="form-control" />
+                <label for="mainInputFile">Display color</label>
+                <div id="main-color" class="input-group colorpicker-component">
+                  <input id="main-color-input" type="text" value="<?php echo htmlspecialchars($formVals['botColor']); ?>" name="botColor" class="form-control" />
                   <span class="input-group-addon"><i></i></span>
                 </div>
               </div>
@@ -106,14 +130,14 @@
               <h4 class="card-title">Alternative track</h4>
               <h6 class="card-subtitle mb-2 text-muted">This subtitle track will be displayed above the main track.</h6>
               <div class="form-group">
-                <label for="exampleInputFile">Subtitle file</label>
-                <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
-                <small id="fileHelp" class="form-text text-muted">File must be in WebVTT or SRT format.</small>
+                <label for="altInputFile">Subtitle file</label>
+                <input type="file" class="form-control-file" id="altInputFile" aria-describedby="altFileHelp" name="top">
+                <small id="altFileHelp" class="form-text text-muted">File must be in WebVTT or SRT format.</small>
               </div>
               <div class="form-group">
-                <label for="exampleInputFile">Display color</label>
-                <div id="cp4" class="input-group colorpicker-component">
-                  <input id="cp4-input" type="text" value="#FFFF00" class="form-control" />
+                <label for="altInputFile">Display color</label>
+                <div id="alt-color" class="input-group colorpicker-component">
+                  <input id="alt-color-input" type="text" value="<?php echo htmlspecialchars($formVals['topColor']); ?>" name="topColor" class="form-control" />
                   <span class="input-group-addon"><i></i></span>
                 </div>
               </div>
@@ -124,24 +148,28 @@
       </div>
       <h4>Output options</h4>
       <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-3 col-form-label">Display font</label>
+        <label for="fontName" class="col-sm-3 col-form-label">Display font</label>
         <div class="col-sm-9">
-          <select class="form-control custom-select">
-            <option selected>Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+          <select id="fontName" class="form-control custom-select" name="fontname">
+<?php
+foreach (Web::FONT_NAMES as $fontName) {
+    $selected = $fontName === $formVals['fontname'] ? " selected" : "";
+    echo "                            <option value=\"" . htmlspecialchars($fontName) . "\"$selected>". htmlspecialchars($fontName) . "</option>\n";
+}
+?>
           </select>
         </div>
       </div>
       <div class="form-group row">
-        <label for="inputPassword3" class="col-sm-3 col-form-label">Text size</label>
+        <label for="fontSize" class="col-sm-3 col-form-label">Text size</label>
         <div class="col-sm-9">
-          <select class="form-control custom-select">
-            <option selected>Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+          <select id="fontSize" class="form-control custom-select" name="fontsize">
+<?php
+foreach (Web::FONT_SIZES as $fontSize) {
+    $selected = $fontSize === $formVals['fontsize'] ? " selected" : "";
+    echo "                            <option value=\"" . htmlspecialchars($fontSize) . "\"$selected>" . htmlspecialchars($fontSize) . "</option>\n";
+}
+?>
           </select>
         </div>
       </div>
@@ -151,12 +179,12 @@
         <div class="col-sm-9">
           <div class="custom-controls-stacked">
             <label class="custom-control custom-radio">
-              <input name="radio-stacked" type="radio" id="alignTogetherBox" checked class="custom-control-input">
+              <input name="forceBottom" value="1" type="radio" id="alignTogetherBox" checked class="custom-control-input">
               <span class="custom-control-indicator"></span>
               <span class="custom-control-description">Both subtitles together at the bottom of the screen</span>
             </label>
             <label class="custom-control custom-radio">
-              <input name="radio-stacked" type="radio" id="alignApartBox" class="custom-control-input">
+              <input name="forceBottom" value="0" type="radio" id="alignApartBox" class="custom-control-input">
               <span class="custom-control-indicator"></span>
               <span class="custom-control-description">Main track at the bottom, alternate at the top,</span>
             </label>
@@ -199,7 +227,7 @@
       'danger': '#d9534f'
     };
     $(function() {
-      $('#cp3').colorpicker({
+      $('#main-color').colorpicker({
         format: 'hex',
         transparent: true,
         colorSelectors: colorSelectors
@@ -208,7 +236,7 @@
           $('@preview-box-main').css('color', ev.value);
         }
       });
-      $('#cp4').colorpicker({
+      $('#alt-color').colorpicker({
         format: 'hex',
         transparent: true,
         colorSelectors: colorSelectors
@@ -218,8 +246,8 @@
         }
       });
 
-      $('#preview-box-main').css('color', $('#cp3-input').val())
-      $('#preview-box-alt').css('color', $('#cp4-input').val());
+      $('#preview-box-main').css('color', $('#main-color-input').val())
+      $('#preview-box-alt').css('color', $('#alt-color-input').val());
       $('#alignTogetherBox').on('change', function() {
         $('#preview-box').addClass('preview-together');
       });

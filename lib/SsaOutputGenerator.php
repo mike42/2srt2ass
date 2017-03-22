@@ -5,13 +5,13 @@ class SsaOutputGenerator
 {
     const DEFAULT_FONT_NAME = 'Arial';
 
-    const DEFAULT_FONT_SIZE = 16;
+    const DEFAULT_FONT_SIZE = '20';
 
     const DEFAULT_FORCE_BOTTOM = false;
 
-    const DEFAULT_TOP_COLOR = '#FFFFF9';
+    const DEFAULT_TOP_COLOR = '#FFFF00';
 
-    const DEFAULT_BOTTOM_COLOR = '#FFFFF9';
+    const DEFAULT_BOTTOM_COLOR = '#FFFFFE';
 
     protected $fontName;
 
@@ -66,7 +66,7 @@ class SsaOutputGenerator
                 'Alignment' => '2'
             )
         );
-        
+
         $defaults = array(
             'Fontname' => $this->fontName,
             'Fontsize' => $this->fontSize,
@@ -91,9 +91,9 @@ class SsaOutputGenerator
             'MarginV' => '10',
             'Encoding' => '0'
         );
-        
+
         $keys = array_keys($defaults);
-        
+
         $styles = array();
         foreach ($specifics as $key => $values) {
             $tmp = array();
@@ -107,21 +107,21 @@ class SsaOutputGenerator
     public function generate(SrtInput $contentTop, SrtInput $contentBot)
     {
         $this->getStyles($contentTop -> getColor(), $contentBot -> getColor(), $styles, $stylesKeys);
-        
+
         $tree = array();
-        
+
         self::parseAndAddSRT($contentTop -> getCleanedContent(), $tree, 'Top');
         self::parseAndAddSRT($contentBot -> getCleanedContent(), $tree, 'Bot');
-        
+
         usort($tree, array(
             'CombineSubtitles\\SsaOutputGenerator',
             'compare'
         ));
-        
+
         // Everything ok, send file !
-        
+
         $outputData = "";
-        
+
         $outputData .= "[Script Info]\r\n";
         $outputData .= "ScriptType: v4.00+\r\n";
         $outputData .= "Collisions: Normal\r\n";
@@ -139,7 +139,7 @@ class SsaOutputGenerator
         $outputData .= "\r\n";
         $outputData .= "[Events]\r\n";
         $outputData .= "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\r\n";
-        
+
         foreach ($tree as $dialogue) {
             $outputData .= "Dialogue: 0," . self::getTimeStamp($dialogue['start']) . "," . self::getTimeStamp($dialogue['end']) . "," . $dialogue['type'] . ",,0000,0000,0000,," . $dialogue['text'] . "\r\n";
         }
@@ -150,11 +150,11 @@ class SsaOutputGenerator
     {
         $eregEvent = '/\d+\n(\d\d:\d\d:\d\d)[\.,](\d\d)\d --> (\d\d:\d\d:\d\d)[\.,](\d\d)\d\n(.+?(\n.+?)*)\n\n/';
         preg_match_all($eregEvent, $text, $matches);
-        
+
         if (count($matches[0]) === 0) {
             throw new \Exception('No subtitles found in SRT file for ' . strtolower($type) . '.');
         }
-        
+
         for ($i = 0; $i < count($matches[0]); $i ++) {
             $tree[] = array(
                 'start' => $matches[1][$i] . '.' . $matches[2][$i],
@@ -163,7 +163,7 @@ class SsaOutputGenerator
                 'text' => str_replace("\n", '\N', $matches[5][$i])
             );
         }
-        
+
         return null;
     }
 
