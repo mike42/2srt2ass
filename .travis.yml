@@ -20,5 +20,5 @@ install:
   - composer install
 
 script:
-  - php vendor/bin/phpcs --standard=psr2 --ignore=vendor -n .
+  - php vendor/bin/phpcs --standard=psr2 --ignore=vendor --ignore=node_modules --extensions=php -n .
   - ./bin/2srt2ssa --main example/example_en.srt --alt example/example_it.srt
