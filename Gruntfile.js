@@ -52,7 +52,7 @@ module.exports = function (grunt) {
           'public/css/site.css': 'src/style/main.scss'
         },
         options: {
-          loadPath: [
+          includePaths: [
             'node_modules/bootstrap/scss',
             'node_modules/bootstrap-colorpicker/src/sass',
           ]
@@ -80,7 +80,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-postcss');
