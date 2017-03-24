@@ -11,14 +11,20 @@ module.exports = function (grunt) {
           'node_modules/bootstrap-colorpicker/dist/img/bootstrap-colorpicker/*.png'
         ],
         dest: 'public/images/'
+      }
+    },
+    uglify: {
+      options: {
+          compress: true,
+          mangle: true,
+          sourceMap: true
       },
       js: {
-        expand: true,
-        flatten: true,
-        src: [
-          'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'
-        ],
-        dest: 'public/js/'
+          src: [
+            'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
+            'src/script/site.js'
+          ],
+          dest: 'public/js/site.min.js'
       }
     },
     postcss: {
@@ -54,7 +60,7 @@ module.exports = function (grunt) {
         options: {
           includePaths: [
             'node_modules/bootstrap/scss',
-            'node_modules/bootstrap-colorpicker/src/sass',
+            'node_modules/bootstrap-colorpicker/src/sass'
           ]
         }
       }
@@ -77,18 +83,16 @@ module.exports = function (grunt) {
   });
 
   /* Load modules */
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-postcss');
-  grunt.loadNpmTasks('grunt-systemjs-builder');
   grunt.loadNpmTasks('grunt-uncss');
 
   /* Configure tasks */
-  grunt.registerTask('js', ['copy:js']);
-  grunt.registerTask('css', ['sass:dist', /* 'postcss:dist' */]);
+  grunt.registerTask('js', ['uglify:js']);
+  grunt.registerTask('css', ['sass:dist', 'postcss:dist']);
   grunt.registerTask('default', ['js', 'css', 'copy:images']);
 };

@@ -14,7 +14,7 @@ if ($formVals === false) {
 if (isset($formVals['error'])) {
     $error = $formVals['error'];
 }
-if(php_sapi_name() === "cli") {
+if (php_sapi_name() === "cli") {
     // Ensure we get the error box on the CLI.
     $error = "Console in use";
 }
@@ -83,7 +83,8 @@ if(php_sapi_name() === "cli") {
       </div>
 
       <p class="lead">You will need your input tracks to be in <a href="https://en.wikipedia.org/wiki/SubRip">SubRip (SRT)</a> or
-        <a href="https://en.wikipedia.org/wiki/WebVTT">WebVTT</a> format. The output contains both tracks in <a href="">SubStation Alpha (SSA)</a> format.</p>
+        <a href="https://en.wikipedia.org/wiki/WebVTT">WebVTT</a> format. The output contains both tracks in <a href="">SubStation Alpha (SSA)</a> format.
+      </p>
 
       <div class="subtitle-box preview-together" id="preview-box">
         <div class="subtitle-spacer-top"></div>
@@ -154,7 +155,7 @@ if(php_sapi_name() === "cli") {
 <?php
 foreach (Web::FONT_NAMES as $fontName) {
     $selected = $fontName === $formVals['fontname'] ? " selected" : "";
-    echo "                            <option value=\"" . htmlspecialchars($fontName) . "\"$selected>". htmlspecialchars($fontName) . "</option>\n";
+    echo "            <option value=\"" . htmlspecialchars($fontName) . "\"$selected>". htmlspecialchars($fontName) . "</option>\n";
 }
 ?>
           </select>
@@ -167,7 +168,7 @@ foreach (Web::FONT_NAMES as $fontName) {
 <?php
 foreach (Web::FONT_SIZES as $fontSize) {
     $selected = $fontSize === $formVals['fontsize'] ? " selected" : "";
-    echo "                            <option value=\"" . htmlspecialchars($fontSize) . "\"$selected>" . htmlspecialchars($fontSize) . "</option>\n";
+    echo "            <option value=\"" . htmlspecialchars($fontSize) . "\"$selected>" . htmlspecialchars($fontSize) . "</option>\n";
 }
 ?>
           </select>
@@ -202,61 +203,9 @@ foreach (Web::FONT_SIZES as $fontSize) {
       <p><a href="https://github.com/mike42/2srt2ssa">2srt2ssa</a> is distributed under the terms of the GNU General Public License, version 3.</p>
       <p>Your use of this website is entirely at your own risk. No warranty is provided by any party, implied or otherwise.</p>
     </footer>
-
   </div>
 
-
-
-
-
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <!-- <script src="js/site.min.js"></script> -->
-  <script src="js/bootstrap-colorpicker.min.js"></script>
-  <script>
-    var colorSelectors = {
-      'black': '#000000',
-      'white': '#ffffff',
-      'red': '#FF0000',
-      'default': '#777777',
-      'primary': '#337ab7',
-      'success': '#5cb85c',
-      'info': '#5bc0de',
-      'warning': '#f0ad4e',
-      'danger': '#d9534f'
-    };
-    $(function() {
-      $('#main-color').colorpicker({
-        format: 'hex',
-        transparent: true,
-        colorSelectors: colorSelectors
-      }).on('changeColor', function(ev) {
-        if(ev.value !== undefined) {
-          $('@preview-box-main').css('color', ev.value);
-        }
-      });
-      $('#alt-color').colorpicker({
-        format: 'hex',
-        transparent: true,
-        colorSelectors: colorSelectors
-      }).on('changeColor', function(ev) {
-        if(ev.value !== undefined) {
-          $('#preview-box-alt').css('color', ev.value);
-        }
-      });
-
-      $('#preview-box-main').css('color', $('#main-color-input').val())
-      $('#preview-box-alt').css('color', $('#alt-color-input').val());
-      $('#alignTogetherBox').on('change', function() {
-        $('#preview-box').addClass('preview-together');
-      });
-      $('#alignApartBox').on('change', function() {
-        $('#preview-box').removeClass('preview-together');
-      });
-
-    });
-  </script>
+  <script src="js/site.min.js"></script>
 </body>
-
 </html>
